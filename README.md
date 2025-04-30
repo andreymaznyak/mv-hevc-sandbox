@@ -1,42 +1,42 @@
-# MV-HEVC в SBS H.264 WebXR Плеер
+# MV-HEVC to SBS H.264 WebXR Player
 
-Проект для транскодирования пространственного видео из формата MV-HEVC в SBS H.264 и его воспроизведения в WebXR.
+A project for transcoding spatial video from MV-HEVC format to SBS H.264 and playing it in WebXR.
 
-## Требования
+## Requirements
 
 - Docker
-- Веб-браузер с поддержкой WebXR (Chrome, Edge, Firefox с включенным WebXR, Meta Quest Browser)
-- VR-гарнитура, совместимая с WebXR
-- Python 3 (для локального веб-сервера)
+- Web browser with WebXR support (Chrome, Edge, Firefox with WebXR enabled, Meta Quest Browser)
+- VR headset compatible with WebXR
+- Python 3 (for local web server)
 
-## Структура проекта
+## Project Structure
 
 ```
 mv-hevc-sandbox/
-├── docker/                  # Docker-контейнер для транскодирования
+├── docker/                  # Docker container for transcoding
 │   ├── Dockerfile
 │   └── transcode.sh
-├── web/                    # Веб-приложение для просмотра
+├── web/                    # Web application for viewing
 │   ├── index.html
 │   ├── main.js
 │   └── styles/
 │       └── main.css
 ├── example-videos/
-│   ├── source/            # Исходные MV-HEVC видео
-│   └── output/            # Транскодированные SBS видео
+│   ├── source/            # Source MV-HEVC videos
+│   └── output/            # Transcoded SBS videos
 └── README.md
 ```
 
-## Использование
+## Usage
 
-### 1. Сборка Docker-образа
+### 1. Building Docker Image
 
 ```bash
 cd docker
 docker build -t mvhevc-transcoder .
 ```
 
-### 2. Транскодирование видео
+### 2. Video Transcoding
 
 ```bash
 docker run --rm \
@@ -47,74 +47,74 @@ docker run --rm \
   /output/example-1-sbs.mp4
 ```
 
-### 3. Запуск веб-сервера
+### 3. Starting Web Server
 
 ```bash
 cd web
 python3 -m http.server 3000 --bind 0.0.0.0
 ```
 
-### 4. Просмотр в VR
+### 4. VR Viewing
 
-1. Откройте браузер и перейдите по адресу `http://localhost:3000`
-2. Подключите VR-гарнитуру
-3. Нажмите кнопку "Enter VR" на веб-странице
-4. Наденьте VR-гарнитуру
+1. Open browser and go to `http://localhost:3000`
+2. Connect VR headset
+3. Click "Enter VR" button on the webpage
+4. Put on VR headset
 
-## Особенности реализации
+## Implementation Details
 
-### Docker-контейнер
+### Docker Container
 
-- Использует Ubuntu 22.04 как базовый образ
-- Устанавливает FFmpeg 7.1+ из исходников для поддержки MV-HEVC
-- Включает скрипт транскодирования с оптимизированными параметрами
+- Uses Ubuntu 22.04 as base image
+- Installs FFmpeg 7.1+ from source for MV-HEVC support
+- Includes transcoding script with optimized parameters
 
-### Веб-приложение
+### Web Application
 
-- Использует Three.js для 3D-рендеринга
-- Поддерживает WebXR для VR-отображения
-- Реализует корректное разделение SBS-видео для левого и правого глаза через UV-маппинг
-- Автоматически обрабатывает различные состояния WebXR-сессии
+- Uses Three.js for 3D rendering
+- Supports WebXR for VR display
+- Implements correct SBS video separation for left and right eyes through UV mapping
+- Automatically handles various WebXR session states
 
-## Устранение неполадок
+## Troubleshooting
 
-### Проблемы с Docker
+### Docker Issues
 
-- Убедитесь, что Docker запущен
-- Проверьте права доступа к директориям source и output
-- Убедитесь, что входное видео действительно в формате MV-HEVC
+- Make sure Docker is running
+- Check access permissions for source and output directories
+- Ensure input video is actually in MV-HEVC format
 
-### Проблемы с веб-приложением
+### Web Application Issues
 
-- Убедитесь, что используете HTTPS или localhost для WebXR
-- Проверьте поддержку WebXR в вашем браузере
-- Убедитесь, что видеофайл успешно загружается (проверьте консоль браузера)
-- При проблемах с воспроизведением попробуйте кликнуть на странице перед входом в VR
+- Make sure you're using HTTPS or localhost for WebXR
+- Check WebXR support in your browser
+- Ensure video file loads successfully (check browser console)
+- If playback issues occur, try clicking on the page before entering VR
 
-### Проблемы с VR
+### VR Issues
 
-- Проверьте подключение VR-гарнитуры
-- Убедитесь, что браузер имеет разрешение на доступ к VR-устройству
-- Проверьте, что гарнитура правильно определяется в настройках системы
+- Check VR headset connection
+- Make sure browser has permission to access VR device
+- Verify headset is properly recognized in system settings
 
-## Технические детали
+## Technical Details
 
-### Параметры транскодирования
+### Transcoding Parameters
 
-FFmpeg использует следующие ключевые параметры:
-- `-filter_complex "[0:v:view:0][0:v:view:1]hstack"` - объединение видов в SBS формат
-- `-c:v libx264` - кодирование в H.264
-- `-crf 23` - баланс качества и размера файла
-- `-preset medium` - баланс скорости кодирования и эффективности сжатия
-- `-tag:v hvc1` - тег для лучшей совместимости
+FFmpeg uses the following key parameters:
+- `-filter_complex "[0:v:view:0][0:v:view:1]hstack"` - combining views into SBS format
+- `-c:v libx264` - encoding to H.264
+- `-b:v 5M` - sets constant bitrate to 5 Mbps (if not specified, would use CRF mode with default value of 23)
+- `-c:a copy` - copies audio stream without re-encoding
+- `-y` - automatically overwrite output file if it exists
 
-### WebXR рендеринг
+### WebXR Rendering
 
-- Используются отдельные меши для левого и правого глаза
-- UV-координаты модифицируются для корректного отображения SBS
-- Поддерживается автоматическое масштабирование при изменении размера окна
-- Реализована обработка прерываний WebXR сессии
+- Uses separate meshes for left and right eyes
+- UV coordinates are modified for correct SBS display
+- Supports automatic scaling when window size changes
+- Implements WebXR session interruption handling
 
-## Лицензия
+## License
 
 MIT

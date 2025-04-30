@@ -1,38 +1,38 @@
 #!/bin/bash
 
-# Проверка наличия аргументов
+# Check for arguments
 if [ "$1" == "--help" ] || [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Использование: $0 <путь_к_входному_MVHEVC> <путь_к_выходному_SBS>"
-  echo "Пример: $0 /input/spatial_video.mov /output/output_sbs.mp4"
+  echo "Usage: $0 <input_MVHEVC_path> <output_SBS_path>"
+  echo "Example: $0 /input/spatial_video.mov /output/output_sbs.mp4"
   exit 1
 fi
 
 INPUT_MVHEVC="$1"
 OUTPUT_SBS="$2"
 
-# Проверка существования входного файла
+# Check if input file exists
 if [ ! -f "$INPUT_MVHEVC" ]; then
-    echo "Ошибка: Входной файл не найден: $INPUT_MVHEVC"
+    echo "Error: Input file not found: $INPUT_MVHEVC"
     exit 1
 fi
 
-# Проверка возможности записи в директорию выходного файла
+# Check write permissions for output directory
 OUTPUT_DIR=$(dirname "$OUTPUT_SBS")
 if [ ! -w "$OUTPUT_DIR" ]; then
-    echo "Ошибка: Нет прав на запись в директорию: $OUTPUT_DIR"
-    # Попробуем создать директорию, если ее нет
+    echo "Error: No write permission for directory: $OUTPUT_DIR"
+    # Try to create directory if it doesn't exist
     mkdir -p "$OUTPUT_DIR"
     if [ ! -w "$OUTPUT_DIR" ]; then
-        echo "Ошибка: Не удалось создать или получить права на запись в директорию: $OUTPUT_DIR"
+        echo "Error: Failed to create or get write permission for directory: $OUTPUT_DIR"
         exit 1
     fi
 fi
 
-echo "Начало транскодирования:"
-echo "  Вход: $INPUT_MVHEVC"
-echo "  Выход: $OUTPUT_SBS"
+echo "Starting transcoding:"
+echo "  Input: $INPUT_MVHEVC"
+echo "  Output: $OUTPUT_SBS"
 
-# Команда FFmpeg для транскодирования MV-HEVC в SBS H.264
+# FFmpeg command for transcoding MV-HEVC to SBS H.264
 ffmpeg -i "$INPUT_MVHEVC" \
        -filter_complex "[0:v:view:0][0:v:view:1]hstack" \
        -c:v libx264 \
@@ -41,11 +41,11 @@ ffmpeg -i "$INPUT_MVHEVC" \
        -y \
        "$OUTPUT_SBS"
 
-# Проверка статуса завершения FFmpeg
+# Check FFmpeg exit status
 if [ $? -ne 0 ]; then
-  echo "Ошибка: FFmpeg завершился с ошибкой."
+  echo "Error: FFmpeg finished with error."
   exit 1
 else
-  echo "Транскодирование успешно завершено: $OUTPUT_SBS"
+  echo "Transcoding completed successfully: $OUTPUT_SBS"
   exit 0
 fi

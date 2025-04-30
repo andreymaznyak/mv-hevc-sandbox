@@ -1,10 +1,10 @@
-# Использовать актуальный образ Ubuntu LTS
+# Use latest Ubuntu LTS image
 FROM ubuntu:22.04
 
-# Установить переменные окружения для неинтерактивной установки
+# Set environment variables for non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Обновить список пакетов и установить базовые зависимости и ПО
+# Update package list and install base dependencies and software
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -36,14 +36,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Установка FFmpeg 7.1+ из исходников ---
-# Создать рабочую директорию
+# --- Install FFmpeg 7.1+ from source ---
+# Create working directory
 WORKDIR /ffmpeg_sources
 
-# Клонировать репозиторий FFmpeg (указываем ветку релиза n7.1)
+# Clone FFmpeg repository (specify release branch n7.1)
 RUN git clone --depth 1 --branch n7.1 https://git.ffmpeg.org/ffmpeg.git ffmpeg
 
-# Сконфигурировать и собрать FFmpeg
+# Configure and build FFmpeg
 WORKDIR /ffmpeg_sources/ffmpeg
 RUN ./configure \
     --enable-gpl \
@@ -59,22 +59,22 @@ RUN ./configure \
     make install && \
     ldconfig
 
-# Очистить исходники для уменьшения размера образа
+# Clean up source files to reduce image size
 WORKDIR /
 RUN rm -rf /ffmpeg_sources
 
-# --- Настройка скрипта транскодирования ---
-# Создать директорию для приложения
+# --- Setup transcoding script ---
+# Create application directory
 WORKDIR /app
 
-# Скопировать скрипт транскодирования в образ
+# Copy transcoding script to image
 COPY transcode.sh /app/transcode.sh
 
-# Сделать скрипт исполняемым
+# Make script executable
 RUN chmod +x /app/transcode.sh
 
-# Установить точку входа для контейнера
+# Set container entrypoint
 ENTRYPOINT ["/app/transcode.sh"]
 
-# Установить команду по умолчанию (можно переопределить при запуске)
+# Set default command (can be overridden at runtime)
 CMD ["--help"]

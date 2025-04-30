@@ -28,7 +28,7 @@ p {
     font-size: 1.1em;
 }
 
-/* Стили для кнопки VR */
+/* VR button styles */
 #VRButton {
     position: absolute;
     bottom: 20px;
@@ -49,12 +49,12 @@ p {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Скрываем видео, так как оно используется только как текстура */
+/* Hide video since it's only used as a texture */
 #sbsVideo {
     display: none;
 }
 
-/* Стили для canvas */
+/* Canvas styles */
 canvas {
     display: block;
     width: 100vw;
