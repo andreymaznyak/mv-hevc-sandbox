@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+#info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 100;
+    pointer-events: none;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin: 0 0 0.5em 0;
+}
+
+p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+/* Стили для кнопки VR */
+#VRButton {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border: 2px solid white;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font: bold 13px sans-serif;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#VRButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Скрываем видео, так как оно используется только как текстура */
+#sbsVideo {
+    display: none;
+}
+
+/* Стили для canvas */
+canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}

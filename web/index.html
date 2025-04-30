@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>WebXR SBS Видео Плеер</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="info">
+        <h1>WebXR SBS Видео Плеер</h1>
+        <p>Нажмите кнопку "Enter VR" для просмотра в VR режиме</p>
+    </div>
+
+    <video 
+        id="sbsVideo" 
+        src="./assets/example-2-sbs.mp4" 
+        loop 
+        muted 
+        playsinline 
+        crossorigin="anonymous" 
+        style="display:none;">
+    </video>
+
+    <video 
+        id="sbsVideo2" 
+        src="./assets/example-2-sbs.mp4" 
+        loop 
+        muted 
+        playsinline 
+        crossorigin="anonymous" 
+        style="display:none;">
+    </video>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
