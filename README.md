@@ -140,6 +140,9 @@ These parameters are used to configure the WebXR viewer:
 - Supports automatic scaling when window size changes
 - Implements WebXR session interruption handling
 
+## DEMO
+[YOUTUBE demo link](https://youtu.be/5GeW4vMtoZo?si=SubWKsYkK7Rx-Qs3)
+
 ## License
 
 MIT
