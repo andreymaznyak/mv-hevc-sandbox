@@ -104,14 +104,39 @@ python3 -m http.server 3000 --bind 0.0.0.0
 FFmpeg uses the following key parameters:
 - `-filter_complex "[0:v:view:0][0:v:view:1]hstack"` - combining views into SBS format
 - `-c:v libx264` - encoding to H.264
-- `-b:v 5M` - sets constant bitrate to 5 Mbps (if not specified, would use CRF mode with default value of 23)
+- `-b:v 20M` - sets constant bitrate to 20 Mbps for high-quality VR video (matches industry recommendations for 1080p VR content)
 - `-c:a copy` - copies audio stream without re-encoding
 - `-y` - automatically overwrite output file if it exists
+
+Note on bitrate: Original MV-HEVC videos typically have bitrates around 16-20 Mbps. For SBS format, maintaining high bitrate is crucial for VR viewing comfort. Major platforms recommend:
+- YouTube: minimum 16 Mbps for 1080p VR
+- Meta Quest: 20-30 Mbps for optimal VR experience
+
+### Stereo Parameters
+
+To extract stereo parameters from the original MV-HEVC video:
+```bash
+ffmpeg -i input_video.mov
+```
+
+The command output includes stereo metadata in the video stream's side data:
+```
+Side data:
+  stereo3d: unspecified, view: packed, primary eye: none, baseline: 19271,
+  horizontal_disparity_adjustment: 0.0200, horizontal_field_of_view: 63.400
+```
+
+These parameters are used to configure the WebXR viewer:
+- `horizontal_field_of_view` - camera's field of view for accurate perspective
+- `horizontal_disparity_adjustment` - stereo separation between left/right views
+- `baseline` - base distance between cameras during recording
 
 ### WebXR Rendering
 
 - Uses separate meshes for left and right eyes
 - UV coordinates are modified for correct SBS display
+- Camera FOV matches the original video's field of view (63.4°)
+- Applies proper stereo separation (0.02) based on video metadata
 - Supports automatic scaling when window size changes
 - Implements WebXR session interruption handling
 

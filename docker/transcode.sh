@@ -36,7 +36,7 @@ echo "  Output: $OUTPUT_SBS"
 ffmpeg -i "$INPUT_MVHEVC" \
        -filter_complex "[0:v:view:0][0:v:view:1]hstack" \
        -c:v libx264 \
-       -b:v 5M \
+       -b:v 20M \
        -c:a copy \
        -y \
        "$OUTPUT_SBS"
