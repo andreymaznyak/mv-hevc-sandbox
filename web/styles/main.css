@@ -28,7 +28,43 @@ p {
     font-size: 1.1em;
 }
 
-/* VR button styles */
+/* Video controls */
+.video-controls {
+    margin: 1em 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    pointer-events: auto;
+}
+
+.control-button {
+    padding: 8px 16px;
+    border: 2px solid white;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font: bold 13px sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#currentVideo {
+    font-size: 1.1em;
+    min-width: 80px;
+}
+
+.controls-hint {
+    margin-top: 0.5em;
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+/* VR button */
 #VRButton {
     position: absolute;
     bottom: 20px;
@@ -49,14 +85,7 @@ p {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Hide video since it's only used as a texture */
-#sbsVideo {
+/* Hide videos since they're only used as textures */
+video {
     display: none;
-}
-
-/* Canvas styles */
-canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
 }

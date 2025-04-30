@@ -10,10 +10,15 @@
     <div id="info">
         <h1>WebXR SBS Video Player</h1>
         <p>Click "Enter VR" button to view in VR mode</p>
+        <div class="video-controls">
+            <button id="prevVideo" class="control-button">&lt; Previous</button>
+            <span id="currentVideo">Video 1/3</span>
+            <button id="nextVideo" class="control-button">Next &gt;</button>
+        </div>
+        <p class="controls-hint">Use controller triggers or buttons to switch videos in VR</p>
     </div>
 
-    <video 
-        id="sbsVideo" 
+    <video id="video1" 
         src="./assets/example-1-sbs.mp4" 
         loop 
         muted 
@@ -22,9 +27,17 @@
         style="display:none;">
     </video>
 
-    <video 
-        id="sbsVideo2" 
+    <video id="video2" 
         src="./assets/example-2-sbs.mp4" 
+        loop 
+        muted 
+        playsinline 
+        crossorigin="anonymous" 
+        style="display:none;">
+    </video>
+
+    <video id="video3" 
+        src="./assets/example-3-sbs.mp4" 
         loop 
         muted 
         playsinline 
