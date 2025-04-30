@@ -19,11 +19,11 @@ mv-hevc-sandbox/
 ├── web/                    # Web application for viewing
 │   ├── index.html
 │   ├── main.js
-│   └── styles/
-│       └── main.css
-├── example-videos/
-│   ├── source/            # Source MV-HEVC videos
-│   └── output/            # Transcoded SBS videos
+│   ├── styles/
+│   │   └── main.css
+│   └── assets/            # Transcoded SBS videos
+├── example-videos/         # Example MV-HEVC videos
+│   └── source/            # Source video files
 └── README.md
 ```
 
