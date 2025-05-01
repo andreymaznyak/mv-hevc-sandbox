@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#photo-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.photo-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.photo-button:hover {
+    background-color: #2980b9;
+}
+
+.photo-button.active {
+    background-color: #2ecc71;
+}
+
+.vr-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.vr-button:hover {
+    background-color: #c0392b;
+}
+
+.vr-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.xr-active .vr-button {
+    background-color: #27ae60;
+}
+
+.xr-active .vr-button:hover {
+    background-color: #219a52;
+}
+
+#status {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #e7e7e7;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.photo-set {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.images-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.image-container {
+    flex: 1;
+    min-width: 300px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.image-container h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+
+canvas {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.xr-active canvas {
+    display: block;
+}
+
+.xr-active #content {
+    display: none;
+}

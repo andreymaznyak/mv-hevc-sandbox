@@ -15,7 +15,6 @@ body {
     box-sizing: border-box;
     text-align: center;
     z-index: 100;
-    pointer-events: none;
 }
 
 h1 {
@@ -28,10 +27,21 @@ p {
     font-size: 1.1em;
 }
 
+a {
+    color: #00ff00;
+    text-decoration: underline;
+    pointer-events: auto;
+}
+
+a:hover {
+    color: #33ff33;
+}
+
 /* Video controls */
 .video-controls {
     margin: 1em 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1em;

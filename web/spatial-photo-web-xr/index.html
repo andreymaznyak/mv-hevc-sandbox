@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <title>Spatial Photo WebXR Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="ui-container">
+        <h1>Spatial Photo WebXR Viewer</h1>
+        <p>This demo shows how to view iPhone Spatial Photos (HEIC format) in VR using WebXR</p>
+        <div class="controls-row">
+            <div id="photo-controls">
+                <button class="photo-button" data-index="4">Photo 4</button>
+                <button class="photo-button" data-index="5">Photo 5</button>
+                <button class="photo-button" data-index="6">Photo 6</button>
+                <button class="photo-button" data-index="7">Photo 7</button>
+            </div>
+            <button id="vr-button" class="vr-button">Enter VR</button>
+        </div>
+        <div id="status">Loading...</div>
+    </div>
+    <div id="content">
+        <div class="photo-set">
+            <div class="images-row">
+                <div class="image-container">
+                    <h3>Left Eye</h3>
+                    <img id="left-eye" alt="Left Eye">
+                </div>
+                <div class="image-container">
+                    <h3>Right Eye</h3>
+                    <img id="right-eye" alt="Right Eye">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

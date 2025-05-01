@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>WebXR SBS Video Player</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
+
 <body>
     <div id="info">
         <h1>WebXR SBS Video Player</h1>
         <p>Click "Enter VR" button to view in VR mode</p>
         <div class="video-controls">
-            <button id="prevVideo" class="control-button">&lt; Previous</button>
-            <span id="currentVideo">Video 1/3</span>
-            <button id="nextVideo" class="control-button">Next &gt;</button>
+            <div>
+                <button id="prevVideo" class="control-button">&lt; Previous</button>
+                <span id="currentVideo">Video 1/3</span>
+                <button id="nextVideo" class="control-button">Next &gt;</button>
+            </div>
+
+
+            <div>
+                <h2>Other Examples:</h2>
+                <ul>
+                    <li><a href="./spatial-photo-web-xr/index.html">Spatial Photo WebXR</a> - view spatial
+                        photos in WebXR</li>
+                    <li><a href="./spatial-photos/index.html">Spatial Photos</a> - view spatial photos on
+                        regular screen</li>
+                </ul>
+            </div>
+
         </div>
         <p class="controls-hint">Use controller triggers or buttons to switch videos in VR</p>
     </div>
 
-    <video id="video1" 
-        src="./assets/example-1-sbs.mp4" 
-        loop 
-        muted 
-        playsinline 
-        crossorigin="anonymous" 
+    <video id="video1" src="./assets/example-1-sbs.mp4" loop muted playsinline crossorigin="anonymous"
         style="display:none;">
     </video>
 
-    <video id="video2" 
-        src="./assets/example-2-sbs.mp4" 
-        loop 
-        muted 
-        playsinline 
-        crossorigin="anonymous" 
+    <video id="video2" src="./assets/example-2-sbs.mp4" loop muted playsinline crossorigin="anonymous"
         style="display:none;">
     </video>
 
-    <video id="video3" 
-        src="./assets/example-3-sbs.mp4" 
-        loop 
-        muted 
-        playsinline 
-        crossorigin="anonymous" 
+    <video id="video3" src="./assets/example-3-sbs.mp4" loop muted playsinline crossorigin="anonymous"
         style="display:none;">
     </video>
 
@@ -56,4 +57,5 @@
 
     <script type="module" src="main.js"></script>
 </body>
+
 </html>
