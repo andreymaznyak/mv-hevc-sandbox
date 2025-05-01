@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEIC Spatial Photo Parser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>HEIC Spatial Photo Parser</h1>
+    <p>This demo shows how to extract and display images from iPhone Spatial Photos (HEIC format)</p>
+    <div id="status">Loading...</div>
+    <div id="content"></div>
+
+    <script type="module">
+        import { initHeicViewer } from './heic-parser.js';
+
+        async function init() {
+            const statusEl = document.getElementById('status');
+            const contentEl = document.getElementById('content');
+            
+            const files = [
+                '../assets/photos/example-4.HEIC',
+                '../assets/photos/example-5.HEIC',
+                '../assets/photos/example-6.HEIC',
+                '../assets/photos/example-7.HEIC',
+            ];
+
+            try {
+                const results = await initHeicViewer(files, (status) => {
+                    statusEl.textContent = status;
+                });
+
+                results.forEach(result => {
+                    const photoSet = document.createElement('div');
+                    photoSet.className = 'photo-set';
+                    
+                    if (result.success) {
+                        photoSet.innerHTML = `
+                            <h2>${result.file}</h2>
+                            <div class="images-row"></div>
+                        `;
+                        
+                        const imagesRow = photoSet.querySelector('.images-row');
+                        result.images.forEach((img, index) => {
+                            const container = document.createElement('div');
+                            container.className = 'image-container';
+                            container.innerHTML = `
+                                <h3>Image ${index + 1} (${img.width}x${img.height})</h3>
+                                <img src="${img.dataUrl}" alt="Extracted image ${index + 1}">
+                                <div class="debug-info">
+                                    Non-zero pixels: ${img.debug.nonZeroPixels}/${img.debug.totalPixels}
+                                    First bytes: ${img.debug.firstPixels.join(', ')}
+                                </div>
+                            `;
+                            imagesRow.appendChild(container);
+                        });
+                    } else {
+                        photoSet.innerHTML = `
+                            <h2>${result.file}</h2>
+                            <div style="color: red; padding: 10px;">
+                                Error: ${result.error}
+                            </div>
+                        `;
+                    }
+
+                    contentEl.appendChild(photoSet);
+                });
+
+                statusEl.textContent = 'All photos processed';
+            } catch (error) {
+                statusEl.textContent = 'Error: ' + error.message;
+                console.error('Init error:', error);
+            }
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
