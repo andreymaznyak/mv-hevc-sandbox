@@ -7,11 +7,13 @@ let videos = [];
 let textures = [];
 let materials = [];
 let meshL, meshR;
+let leftCanvas, rightCanvas, leftCtx, rightCtx;
 
 // UI elements
 const prevButton = document.getElementById('prevVideo');
 const nextButton = document.getElementById('nextVideo');
 const currentVideoText = document.getElementById('currentVideo');
+const playPauseButton = document.getElementById('playPause');
 
 init();
 animate();
@@ -33,12 +35,27 @@ function init() {
     // Add VR button
     document.body.appendChild(VRButton.createButton(renderer));
 
+    // --- Canvas setup ---
+    leftCanvas = document.getElementById('left-eye');
+    rightCanvas = document.getElementById('right-eye');
+    leftCtx = leftCanvas.getContext('2d');
+    rightCtx = rightCanvas.getContext('2d');
+
+    // Set canvas sizes (assuming 16:9 aspect ratio)
+    const canvasWidth = leftCanvas.parentElement.clientWidth;
+    const canvasHeight = Math.floor(canvasWidth * 9/16);
+    leftCanvas.width = rightCanvas.width = canvasWidth;
+    leftCanvas.height = rightCanvas.height = canvasHeight;
+
     // --- Videos setup ---
     videos = [
         document.getElementById('video1'),
         document.getElementById('video2'),
         document.getElementById('video3')
     ];
+
+    // Initialize first video
+    initVideo(videos[currentVideoIndex]);
 
     // --- Textures and materials setup ---
     videos.forEach(video => {
@@ -62,18 +79,18 @@ function init() {
     const geometryL = geometry.clone();
     const geometryR = geometry.clone();
 
-    // Setup UV coordinates for left eye (left half of texture)
+    // Setup UV coordinates for left eye (right half of texture)
     const uvsL = geometryL.attributes.uv;
     for (let i = 0; i < uvsL.count * 2; i += 2) {
         uvsL.array[i] *= 0.5;
+        uvsL.array[i] += 0.5;
     }
     uvsL.needsUpdate = true;
 
-    // Setup UV coordinates for right eye (right half of texture)
+    // Setup UV coordinates for right eye (left half of texture)
     const uvsR = geometryR.attributes.uv;
     for (let i = 0; i < uvsR.count * 2; i += 2) {
         uvsR.array[i] *= 0.5;
-        uvsR.array[i] += 0.5;
     }
     uvsR.needsUpdate = true;
 
@@ -101,50 +118,102 @@ function init() {
     renderer.xr.addEventListener('sessionend', onSessionEnd);
 
     // Video controls
-    prevButton.addEventListener('click', () => switchVideo('prev'));
-    nextButton.addEventListener('click', () => switchVideo('next'));
+    prevButton.addEventListener('click', () => switchVideo('prev').catch(console.error));
+    nextButton.addEventListener('click', () => switchVideo('next').catch(console.error));
+    playPauseButton.addEventListener('click', () => togglePlayPause().catch(console.error));
 
     // Keyboard controls
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') switchVideo('prev');
-        if (event.key === 'ArrowRight') switchVideo('next');
+        if (event.key === 'ArrowLeft') switchVideo('prev').catch(console.error);
+        if (event.key === 'ArrowRight') switchVideo('next').catch(console.error);
     });
 
     // Start first video on click (for browsers blocking autoplay)
     document.addEventListener('click', () => {
-        if (videos[currentVideoIndex].paused) {
-            videos[currentVideoIndex].play()
-                .catch(e => console.error("Video playback error:", e));
+        const video = videos[currentVideoIndex];
+        if (video.paused) {
+            initVideo(video).catch(console.error);
         }
     }, { once: true });
 
     updateVideoUI();
 }
 
-function switchVideo(direction) {
-    // Stop current video
-    videos[currentVideoIndex].pause();
+async function switchVideo(direction) {
+    try {
+        // Stop current video
+        const oldVideo = videos[currentVideoIndex];
+        oldVideo.pause();
 
-    // Update index
-    if (direction === 'next') {
-        currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-    } else {
-        currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+        // Update index
+        if (direction === 'next') {
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+        } else {
+            currentVideoIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+        }
+
+        // Update materials
+        meshL.material = materials[currentVideoIndex];
+        meshR.material = materials[currentVideoIndex];
+
+        // Initialize new video
+        await initVideo(videos[currentVideoIndex]);
+
+    } catch (error) {
+        console.error("Error switching video:", error);
     }
-
-    // Update materials
-    meshL.material = materials[currentVideoIndex];
-    meshR.material = materials[currentVideoIndex];
-
-    // Start new video
-    videos[currentVideoIndex].play()
-        .catch(e => console.error("Video playback error when switching:", e));
-
-    updateVideoUI();
 }
 
 function updateVideoUI() {
     currentVideoText.textContent = `Video ${currentVideoIndex + 1}/${videos.length}`;
+    updatePlayPauseButton();
+}
+
+function updatePlayPauseButton() {
+    const video = videos[currentVideoIndex];
+    playPauseButton.textContent = video.paused ? 'Play' : 'Pause';
+}
+
+async function togglePlayPause() {
+    try {
+        const video = videos[currentVideoIndex];
+        if (video.paused) {
+            await video.play();
+        } else {
+            video.pause();
+        }
+        updatePlayPauseButton();
+    } catch (error) {
+        console.error("Error toggling video:", error);
+    }
+}
+
+async function initVideo(video) {
+    return new Promise((resolve, reject) => {
+        const onMetadata = async () => {
+            try {
+                // Set canvas sizes
+                const halfWidth = video.videoWidth / 2;
+                const height = video.videoHeight;
+                leftCanvas.width = rightCanvas.width = halfWidth;
+                leftCanvas.height = rightCanvas.height = height;
+
+                // Start playing
+                await video.play();
+                updateVideoUI();
+                updatePlayPauseButton();
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        };
+
+        if (video.readyState >= 1) {
+            onMetadata();
+        } else {
+            video.addEventListener('loadedmetadata', onMetadata, { once: true });
+        }
+    });
 }
 
 function onWindowResize() {
@@ -153,15 +222,20 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onSessionStart() {
-    if (videos[currentVideoIndex].paused) {
-        videos[currentVideoIndex].play()
-            .catch(e => console.error("Video playback error at session start:", e));
-    }
+async function onSessionStart() {
+    try {
+        const video = videos[currentVideoIndex];
+        if (video.paused) {
+            await video.play();
+            updatePlayPauseButton();
+        }
 
-    // Add VR controller event listeners
-    renderer.xr.getController(0).addEventListener('select', () => switchVideo('prev'));
-    renderer.xr.getController(1).addEventListener('select', () => switchVideo('next'));
+        // Add VR controller event listeners
+        renderer.xr.getController(0).addEventListener('select', () => switchVideo('prev').catch(console.error));
+        renderer.xr.getController(1).addEventListener('select', () => switchVideo('next').catch(console.error));
+    } catch (error) {
+        console.error("Error starting VR session:", error);
+    }
 }
 
 function onSessionEnd() {
@@ -174,4 +248,33 @@ function animate() {
 
 function render() {
     renderer.render(scene, camera);
+    updateCanvasViews();
+}
+
+function updateCanvasViews() {
+    const video = videos[currentVideoIndex];
+    if (video.readyState >= 2) {  // Show frames even when paused
+        const halfWidth = video.videoWidth / 2;
+        const height = video.videoHeight;
+
+        try {
+            // Clear canvases first
+            leftCtx.clearRect(0, 0, leftCanvas.width, leftCanvas.height);
+            rightCtx.clearRect(0, 0, rightCanvas.width, rightCanvas.height);
+
+            // Update left eye view (right half of the video)
+            leftCtx.drawImage(video,
+                halfWidth, 0, halfWidth, height,  // Source rectangle (right half)
+                0, 0, leftCanvas.width, leftCanvas.height  // Destination rectangle
+            );
+
+            // Update right eye view (left half of the video)
+            rightCtx.drawImage(video,
+                0, 0, halfWidth, height,  // Source rectangle (left half)
+                0, 0, rightCanvas.width, rightCanvas.height  // Destination rectangle
+            );
+        } catch (e) {
+            console.error("Error drawing video frame:", e);
+        }
+    }
 }

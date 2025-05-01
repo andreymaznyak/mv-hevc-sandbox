@@ -95,7 +95,51 @@ a:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Hide videos since they're only used as textures */
+/* Hide videos but keep them loaded and playing */
 video {
-    display: none;
+    position: absolute;
+    left: -9999px;
+    visibility: hidden;
+}
+
+/* Video preview display */
+#content {
+    margin-top: 220px;
+    padding: 20px;
+}
+
+.video-set {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.images-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.image-container {
+    flex: 1;
+    min-width: 300px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.image-container h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: white;
+}
+
+.image-container canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background: black;
 }

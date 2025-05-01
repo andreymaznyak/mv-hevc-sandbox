@@ -14,14 +14,6 @@
         <p>Click "Enter VR" button to view in VR mode</p>
         <div class="video-controls">
             <div>
-                <button id="prevVideo" class="control-button">&lt; Previous</button>
-                <span id="currentVideo">Video 1/3</span>
-                <button id="nextVideo" class="control-button">Next &gt;</button>
-            </div>
-
-
-            <div>
-                <h2>Other Examples:</h2>
                 <ul>
                     <li><a href="./spatial-photo-web-xr/index.html">Spatial Photo WebXR</a> - view spatial
                         photos in WebXR</li>
@@ -29,22 +21,34 @@
                         regular screen</li>
                 </ul>
             </div>
-
+            <div>
+                <button id="prevVideo" class="control-button">&lt; Previous</button>
+                <span id="currentVideo">Video 1/3</span>
+                <button id="nextVideo" class="control-button">Next &gt;</button>
+                <button id="playPause" class="control-button">Pause</button>
+            </div>
         </div>
         <p class="controls-hint">Use controller triggers or buttons to switch videos in VR</p>
     </div>
 
-    <video id="video1" src="./assets/example-1-sbs.mp4" loop muted playsinline crossorigin="anonymous"
-        style="display:none;">
-    </video>
+    <div id="content">
+        <div class="video-set">
+            <div class="images-row">
+                <div class="image-container">
+                    <h3>Left Eye</h3>
+                    <canvas id="left-eye" alt="Left eye view"></canvas>
+                </div>
+                <div class="image-container">
+                    <h3>Right Eye</h3>
+                    <canvas id="right-eye" alt="Right eye view"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <video id="video2" src="./assets/example-2-sbs.mp4" loop muted playsinline crossorigin="anonymous"
-        style="display:none;">
-    </video>
-
-    <video id="video3" src="./assets/example-3-sbs.mp4" loop muted playsinline crossorigin="anonymous"
-        style="display:none;">
-    </video>
+    <video id="video1" src="./assets/example-1-sbs.mp4" loop muted playsinline crossorigin="anonymous"></video>
+    <video id="video2" src="./assets/example-2-sbs.mp4" loop muted playsinline crossorigin="anonymous"></video>
+    <video id="video3" src="./assets/example-3-sbs.mp4" loop muted playsinline crossorigin="anonymous"></video>
 
     <script type="importmap">
         {
